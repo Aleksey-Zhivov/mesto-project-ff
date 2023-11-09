@@ -1,3 +1,6 @@
+import './pages/index.css';
+import { initialCards } from './cards.js';
+
 const cardContainer = document.querySelector('.places__list');
 
 function createCard(cardParameters, deleteFunction) {
