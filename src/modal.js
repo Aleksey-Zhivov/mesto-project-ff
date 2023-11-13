@@ -15,7 +15,7 @@ function closePopupWithEsc(event) {
   }
 }
 
-function closePopupOutsideClick() {
+function closePopupByOutsideClick() {
   const page = document.querySelector('.page');
   page.addEventListener('click', (event) => {
     const popupIsOpened = event.target.closest('.popup_is-opened');
@@ -25,4 +25,4 @@ function closePopupOutsideClick() {
   });
 }
 
-export { openPopup, closePopup, closePopupOutsideClick };
+export { openPopup, closePopup, closePopupByOutsideClick };

@@ -1,57 +1,51 @@
 import './pages/index.css';
-import { initialCards } from './cards.js';
-import { openPopup, closePopup, closePopupOutsideClick } from './modal';
+import { initialCards } from './cards';
+import { createCard, deleteCard, likeImage } from './card';
+import { openPopup, closePopup, closePopupByOutsideClick } from './modal';
 
 const cardContainer = document.querySelector('.places__list');
-
 const popupClose = document.querySelectorAll('.popup__close');
-
 const popupTypeEdit= document.querySelector('.popup_type_edit');
 const editProfile = document.querySelector('.profile__edit-button');
-
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const addNewCard = document.querySelector('.profile__add-button');
+const popupTypeImage = document.querySelector('.popup_type_image');
+const popupImage = document.querySelector('.popup__image');
+const popupCaption = document.querySelector('.popup__caption');
+const formElement = document.querySelector('.popup__form');
+const nameInput = formElement.querySelector('.popup__input_type_name');
+const jobInput = formElement.querySelector('.popup__input_type_description');
+const profileTitle = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
 
-const popupImage = document.querySelector('.popup_type_image');
-const imageItem = document.querySelectorAll('.places__item');
 
-function createCard(cardParameters, deleteFunction) {
-  const cardTemplate = document.querySelector('#card-template').content;
-  const card = cardTemplate.querySelector('.card').cloneNode(true);
-  const cardImage = card.querySelector('.card__image');
-
-  cardImage.src = cardParameters.link;
-  cardImage.alt = cardParameters.name;
-  card.querySelector('.card__title').textContent = cardParameters.name;
-  card.querySelector('.card__delete-button').addEventListener('click', (event) => {
-    deleteFunction(event);
-  });
-
-  return card;
-}
-
-function addCard(cardParameters, deleteFunction) {
-  const card = createCard(cardParameters, deleteFunction);
+function addCard(cardParameters, deleteFunction, openFunction) {
+  const card = createCard(cardParameters, deleteFunction, openFunction);
   cardContainer.append(card);
 }
 
-function deleteCard(event) {
-  event.target.closest('.card').remove();
-}
-
 initialCards.forEach((elem) => {
-  addCard(elem, deleteCard);
+  addCard(elem, deleteCard, openImage);
 });
 
 editProfile.addEventListener('click', () => {
   openPopup(popupTypeEdit);
-  closePopupOutsideClick();
+  closePopupByOutsideClick();
+  handleFormSubmit();
 });
 
 addNewCard.addEventListener('click', () => {
   openPopup(popupNewCard);
-  closePopupOutsideClick();
+  closePopupByOutsideClick();
 });
+
+function openImage(cardImage, cardTitle) {
+  popupImage.src = cardImage;
+  popupImage.alt = cardTitle;
+  popupCaption.textContent = cardTitle;
+  openPopup(popupTypeImage);
+  closePopupByOutsideClick();
+};
 
 popupClose.forEach((elem) => {
   elem.addEventListener('click', (event) => {
@@ -59,3 +53,17 @@ popupClose.forEach((elem) => {
     closePopup(popupIsOpened);
   });
 });
+
+
+function handleFormSubmit(evt) {
+  //evt.preventDefault(); - ошибка "Cannot read properties of undefined (reading 'preventDefault')"
+
+  if (popupTypeEdit.classList.contains('popup_is-opened')) {
+    nameInput.value = profileTitle.textContent;
+    jobInput.value = profileDescription.textContent;
+  } else {
+    popupTypeEdit.reset();
+  };
+};
+
+formElement.addEventListener('submit', handleFormSubmit);
