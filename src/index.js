@@ -12,12 +12,11 @@ const addNewCard = document.querySelector('.profile__add-button');
 const popupTypeImage = document.querySelector('.popup_type_image');
 const popupImage = document.querySelector('.popup__image');
 const popupCaption = document.querySelector('.popup__caption');
-const formElement = document.querySelector('.popup__form');
-const nameInput = formElement.querySelector('.popup__input_type_name');
-const jobInput = formElement.querySelector('.popup__input_type_description');
+const formElement = document.forms['edit-profile'];
+const nameInput = formElement.elements.name;
+const jobInput = formElement.elements.description;
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
-
 
 function addCard(cardParameters, deleteFunction, openFunction) {
   const card = createCard(cardParameters, deleteFunction, openFunction);
@@ -25,13 +24,13 @@ function addCard(cardParameters, deleteFunction, openFunction) {
 }
 
 initialCards.forEach((elem) => {
-  addCard(elem, deleteCard, openImage);
+  addCard(elem, deleteCard, openImage, likeImage);
 });
 
 editProfile.addEventListener('click', () => {
   openPopup(popupTypeEdit);
+  changeForm();
   closePopupByOutsideClick();
-  handleFormSubmit();
 });
 
 addNewCard.addEventListener('click', () => {
@@ -54,16 +53,20 @@ popupClose.forEach((elem) => {
   });
 });
 
-
-function handleFormSubmit(evt) {
-  //evt.preventDefault(); - ошибка "Cannot read properties of undefined (reading 'preventDefault')"
-
+function changeForm() {
   if (popupTypeEdit.classList.contains('popup_is-opened')) {
     nameInput.value = profileTitle.textContent;
     jobInput.value = profileDescription.textContent;
   } else {
-    popupTypeEdit.reset();
+    formElement.reset();
   };
 };
+
+function handleFormSubmit(event) {
+  event.preventDefault();
+  profileTitle.textContent = nameInput.value;
+  profileDescription.textContent = jobInput.value;
+  closePopup(popupTypeEdit);
+}
 
 formElement.addEventListener('submit', handleFormSubmit);

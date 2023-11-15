@@ -1,4 +1,4 @@
-function createCard(cardParameters, deleteFunction, openFunction, likeGu) {
+function createCard(cardParameters, deleteFunction, openFunction, likeFunction) {
   const cardTemplate = document.querySelector('#card-template').content;
   const card = cardTemplate.querySelector('.card').cloneNode(true);
   const cardImage = card.querySelector('.card__image');
@@ -15,6 +15,10 @@ function createCard(cardParameters, deleteFunction, openFunction, likeGu) {
     openFunction(cardImage.src, cardTitle.textContent);
   });
 
+  card.addEventListener('click', (event) => {
+    event.target === card.querySelector('.card__like-button') ? likeImage(event) : false;
+  });
+
   return card;
 }
 
@@ -22,8 +26,8 @@ function deleteCard(event) {
   event.target.closest('.card').remove();
 }
 
-function likeImage(evt) {
-  evt.target.classList.toggle('card__like-button_is-active');
+function likeImage(event) {
+  event.target.classList.toggle('card__like-button_is-active');
 }
 
 export { createCard, deleteCard, likeImage };
