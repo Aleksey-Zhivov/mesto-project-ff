@@ -16,7 +16,7 @@ function createCard(cardParameters, deleteFunction, openFunction, likeFunction) 
   });
 
   card.addEventListener('click', (event) => {
-    event.target === card.querySelector('.card__like-button') ? likeImage(event) : false;
+    event.target === card.querySelector('.card__like-button') ? likeFunction(event) : false;
   });
 
   return card;
