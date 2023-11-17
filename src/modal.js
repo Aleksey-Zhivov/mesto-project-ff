@@ -1,7 +1,7 @@
 function openPopup(elem) {
   elem.classList.add('popup_is-animated');
   setTimeout(function() { //если убрать задержку в 0мс, то на первый клик анимация не работает
-    elem.classList.add('popup_is-opened');
+    elem.classList.add('popup_is-opened'); 
   }, 0);
   document.addEventListener('keydown', closePopupWithEsc);
 }
@@ -23,7 +23,7 @@ function closePopupWithEsc(event) {
 
 function closePopupByOutsideClick() {
   const page = document.querySelector('.page');
-  page.addEventListener('click', (event) => {
+  page.addEventListener('mousedown', (event) => {
     const popupIsOpened = event.target.closest('.popup_is-opened');
     if (page.contains(popupIsOpened)) {
       event.target === popupIsOpened ? closePopup(popupIsOpened) : false;

@@ -1,4 +1,4 @@
-function createCard(cardParameters, deleteFunction, openFunction, likeFunction) {
+function createCard(cardParameters, deleteCardCallback, openPopupCallback, likeImageCallback) {
   const cardTemplate = document.querySelector('#card-template').content;
   const card = cardTemplate.querySelector('.card').cloneNode(true);
   const cardImage = card.querySelector('.card__image');
@@ -9,14 +9,14 @@ function createCard(cardParameters, deleteFunction, openFunction, likeFunction) 
   cardTitle.textContent = cardParameters.name;
   card.querySelector('.card__title').textContent = cardParameters.name;
   card.querySelector('.card__delete-button').addEventListener('click', (event) => {
-    deleteFunction(event);
+    deleteCardCallback(event);
   });
   cardImage.addEventListener('click', () => {
-    openFunction(cardImage.src, cardTitle.textContent);
+    openPopupCallback(cardImage.src, cardTitle.textContent);
   });
 
   card.addEventListener('click', (event) => {
-    event.target === card.querySelector('.card__like-button') ? likeFunction(event) : false;
+    event.target === card.querySelector('.card__like-button') ? likeImageCallback(event) : false;
   });
 
   return card;
