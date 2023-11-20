@@ -92,3 +92,24 @@ popupCloseButtons.forEach((elem) => {
 //Закрытие попапа по оверлею
 
 closePopupByOutsideClick();
+
+function serializeForm(formNode) {
+  const { elements } = formNode;
+  
+  const data = Array.from(elements)
+  .filter((item) => !!item.name)
+  .map((element) => {
+    const { name, value } = element
+
+    return { name, value }
+  })
+
+  console.log(data);
+}
+
+function handleFormSubmit(event) {
+  event.preventDefault()
+  serializeForm(formEditProfile)
+}
+
+formEditProfile.addEventListener('submit', handleFormSubmit)
