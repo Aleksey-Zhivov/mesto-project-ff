@@ -1,0 +1,19 @@
+.popup__input-error_active {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 12px;
+    flex-shrink: 0;
+    color: #F00;
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 400;
+    /*настройки для того, чтобы попап не растягивался сообщениями об ошибке*/
+    position: relative; 
+    margin-top: -12px;
+}
+
+.popup__input-error_active:last-of-type {
+    margin-top: 10px;
+    margin-bottom: -22px;
+  }

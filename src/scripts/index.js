@@ -2,6 +2,7 @@ import '../pages/index.css';
 import { initialCards } from './cards';
 import { createCard, deleteCard, likeImage } from './card';
 import { openPopup, closePopup, closePopupByOutsideClick } from './modal';
+import { enableValidation, clearValidation } from './validation'
 
 const cardContainer = document.querySelector('.places__list');
 
@@ -67,6 +68,7 @@ newPlace.addEventListener('submit', addNewCard);
 
 //Работа с формой изменения данных профиля
 
+
 function submitProfileForm(event) {
   event.preventDefault();
   profileTitle.textContent = nameInput.value;
@@ -93,23 +95,11 @@ popupCloseButtons.forEach((elem) => {
 
 closePopupByOutsideClick();
 
-function serializeForm(formNode) {
-  const { elements } = formNode;
-  
-  const data = Array.from(elements)
-  .filter((item) => !!item.name)
-  .map((element) => {
-    const { name, value } = element
-
-    return { name, value }
-  })
-
-  console.log(data);
-}
-
-function handleFormSubmit(event) {
-  event.preventDefault()
-  serializeForm(formEditProfile)
-}
-
-formEditProfile.addEventListener('submit', handleFormSubmit)
+enableValidation({
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__input-error_active",
+  configuration: "config"
+});
