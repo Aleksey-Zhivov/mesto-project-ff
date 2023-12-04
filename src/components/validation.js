@@ -69,6 +69,7 @@ function clearValidation(formElement, configuration) {
   const buttonElement = formElement.querySelector(configuration.submitButtonSelector);
   toggleButtonState(inputList, buttonElement, configuration);
   inputList.forEach((inputElement) => {
+    toggleButtonState(inputList, buttonElement, configuration);
     hideInputError(formElement, inputElement, configuration);
   });
 };

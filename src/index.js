@@ -1,8 +1,9 @@
-import '../pages/index.css';
-import { initialCards } from './cards';
-import { createCard, deleteCard, likeImage } from './card';
-import { openPopup, closePopup, closePopupByOutsideClick } from './modal';
-import { enableValidation, clearValidation } from './validation'
+import './pages/index.css';
+import { initialCards } from './components/cards';
+import { createCard, deleteCard, likeImage } from './components/card';
+import { openPopup, closePopup, closePopupByOutsideClick } from './components/modal';
+import { enableValidation, clearValidation } from './components/validation';
+import { getUserInfo, getInitialCards } from './components/api';
 
 const cardContainer = document.querySelector('.places__list');
 
@@ -109,3 +110,7 @@ popupCloseButtons.forEach((elem) => {
 closePopupByOutsideClick();
 
 enableValidation(validationConfig);
+
+getUserInfo();
+
+getInitialCards();
