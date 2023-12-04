@@ -28,6 +28,15 @@ const newPlace = document.forms['new-place'];
 const placeName = newPlace.elements['place-name'];
 const placeLink = newPlace.elements['link'];
 
+const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button-inactive",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__input-error_active",
+}
+
 //Добавление карточек:
 
 function addCard(cardParameters, deleteCardCallback, openPopupCallback, likeImageCallback) {
@@ -59,9 +68,11 @@ function addNewCard(evt) {
 
   const card = createCard(cardParameters, deleteCard, openImage, likeImage);
   cardContainer.prepend(card);
+  
 
   closePopup(popupNewCard);
   newPlace.reset();
+  clearValidation(newPlace, validationConfig);
 }
 
 newPlace.addEventListener('submit', addNewCard);
@@ -77,10 +88,12 @@ function submitProfileForm(event) {
 }
 
 profileEditButtton.addEventListener('click', () => {
-  openPopup(popupTypeEdit);
   nameInput.value = profileTitle.textContent; 
-  jobInput.value = profileDescription.textContent; 
+  jobInput.value = profileDescription.textContent;
+  clearValidation(formEditProfile, validationConfig);
+  openPopup(popupTypeEdit);
 });
+
 
 formEditProfile.addEventListener('submit', submitProfileForm);
 
@@ -95,11 +108,4 @@ popupCloseButtons.forEach((elem) => {
 
 closePopupByOutsideClick();
 
-enableValidation({
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__button",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__input-error_active",
-  configuration: "config"
-});
+enableValidation(validationConfig);
