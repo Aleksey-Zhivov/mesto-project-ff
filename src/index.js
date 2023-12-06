@@ -62,19 +62,20 @@ newCard.addEventListener('click', () => {
 async function addNewCard(evt) {
   evt.preventDefault();
 
-  console.log(userId);
-
   const cardParameters = await postCard(placeName.value, placeLink.value);
-  const card = createCard({
-    cardParameters: cardParameters,
-    userId: userId,
-    deleteCardCallback: deleteCard,
-    openPopupCallback: openImage,
-    likeImageCallback: likeImage
-  });
-  console.log(userId);
-
-  cardContainer.prepend(card);
+  console.log(cardParameters);
+  try {
+    const card = createCard({
+      cardParameters: cardParameters,
+      userId: userId,
+      deleteCardCallback: deleteCard,
+      openPopupCallback: openImage,
+      likeImageCallback: likeImage
+    });
+    cardContainer.prepend(card);
+  } catch (error) {
+    console.log(error);
+  }
   closePopup(popupNewCard);
 }
 
