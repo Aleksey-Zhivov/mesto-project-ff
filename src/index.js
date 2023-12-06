@@ -1,9 +1,8 @@
 import './pages/index.css';
-import { initialCards } from './components/cards';
-import { createCard, deleteCard, likeImage } from './components/card';
+import { createCard, likeImage } from './components/card';
 import { openPopup, closePopup, closePopupByOutsideClick } from './components/modal';
 import { enableValidation, clearValidation } from './components/validation';
-import { getUserInfo, getInitialCards } from './components/api';
+import { getUserInfo, changeUserInfo, getInitialCards, postCard, removeCard } from './components/api';
 
 const cardContainer = document.querySelector('.places__list');
 
@@ -24,6 +23,7 @@ const nameInput = formEditProfile.elements['name'];
 const jobInput = formEditProfile.elements['description'];
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+const profileAvatar = document.querySelector('.profile__image');
 
 const newPlace = document.forms['new-place'];
 const placeName = newPlace.elements['place-name'];
@@ -38,53 +38,81 @@ const validationConfig = {
   errorClass: "popup__input-error_active",
 }
 
+let userId;
+let cardData;
+
 //Добавление карточек:
 
-function addCard(cardParameters, deleteCardCallback, openPopupCallback, likeImageCallback) {
-  const card = createCard(cardParameters, deleteCardCallback, openPopupCallback, likeImageCallback);
+function addCard({cardParameters, userId, deleteCardCallback, openPopupCallback, likeImageCallback}) {
+  const card = createCard(cardParameters, userId, deleteCardCallback, openPopupCallback, likeImageCallback);
   cardContainer.append(card);
 }
 
-function openImage(cardImage, cardTitle) { //открытие попапа с картинкой
-  popupImage.src = cardImage;
-  popupImage.alt = cardTitle;
-  popupCaption.textContent = cardTitle;
+function openImage(cardParameters) { //открытие попапа с картинкой
+  popupImage.src = cardParameters.link;
+  popupImage.alt = cardParameters.name;
+  popupCaption.textContent = cardParameters.name;
   openPopup(popupTypeImage);
 };
-
-initialCards.forEach((elem) => {
-  addCard(elem, deleteCard, openImage, likeImage);
-});
 
 newCard.addEventListener('click', () => {
   openPopup(popupNewCard);
 });
 
-function addNewCard(evt) {
+async function addNewCard(evt) {
   evt.preventDefault();
 
-  const cardParameters = {};
-  cardParameters.name = placeName.value;
-  cardParameters.link = placeLink.value;
+  console.log(userId);
 
-  const card = createCard(cardParameters, deleteCard, openImage, likeImage);
+  const cardParameters = await postCard(placeName.value, placeLink.value);
+  const card = createCard({
+    cardParameters: cardParameters,
+    userId: userId,
+    deleteCardCallback: deleteCard,
+    openPopupCallback: openImage,
+    likeImageCallback: likeImage
+  });
+  console.log(userId);
+
   cardContainer.prepend(card);
-  
-
   closePopup(popupNewCard);
-  newPlace.reset();
-  clearValidation(newPlace, validationConfig);
+}
+
+const deleteCard = async (event, cardParameters) => {
+  cardData = [event.target.closest('.card'), cardParameters._id];
+  const [card, cardId] = cardData;
+  await removeCard(cardId);
+  card.remove();
 }
 
 newPlace.addEventListener('submit', addNewCard);
 
 //Работа с формой изменения данных профиля
 
+Promise.all([getUserInfo(), getInitialCards()])
+  .then(data => {
+    const [userInfo, initialCards] = data;
+    profileTitle.textContent = userInfo.name;
+    profileDescription.textContent = userInfo.about;
+    profileAvatar.setAttribute('style', `background-image: url(${userInfo.avatar});`);
+    userId = userInfo._id;
 
-function submitProfileForm(event) {
+    initialCards.forEach((cardParameters) => {
+      addCard({
+        cardParameters: cardParameters, 
+        userId: userId,
+        deleteCardCallback: deleteCard, 
+        openPopupCallback: openImage, 
+        likeImageCallback: likeImage
+      });
+    })
+});
+
+async function submitProfileForm(event) {
   event.preventDefault();
-  profileTitle.textContent = nameInput.value;
-  profileDescription.textContent = jobInput.value;
+  const data = await changeUserInfo(nameInput.value, jobInput.value);
+  profileTitle.textContent = data.name;
+  profileDescription.textContent = data.about;
   closePopup(popupTypeEdit);
 }
 
@@ -94,7 +122,6 @@ profileEditButtton.addEventListener('click', () => {
   clearValidation(formEditProfile, validationConfig);
   openPopup(popupTypeEdit);
 });
-
 
 formEditProfile.addEventListener('submit', submitProfileForm);
 
@@ -110,7 +137,3 @@ popupCloseButtons.forEach((elem) => {
 closePopupByOutsideClick();
 
 enableValidation(validationConfig);
-
-getUserInfo();
-
-getInitialCards();

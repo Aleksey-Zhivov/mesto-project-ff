@@ -75,5 +75,3 @@ function clearValidation(formElement, configuration) {
 };
 
 export { enableValidation, clearValidation };
-
-//^[A-Z]{1}[a-z]{1,14} [A-Z]{1}[a-z]{1,14}$)|(^[А-Я]{1}[а-я]{1,14} [А-Я]{1}[а-я]{1,14}$
