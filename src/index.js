@@ -65,13 +65,13 @@ async function addNewCard(evt) {
   const cardParameters = await postCard(placeName.value, placeLink.value);
   console.log(cardParameters);
   try {
-    const card = createCard({
-      cardParameters: cardParameters,
-      userId: userId,
-      deleteCardCallback: deleteCard,
-      openPopupCallback: openImage,
-      likeImageCallback: likeImage
-    });
+    const card = createCard(
+      cardParameters,
+      userId,
+      deleteCard,
+      openImage,
+      likeImage
+    );
     cardContainer.prepend(card);
   } catch (error) {
     console.log(error);
