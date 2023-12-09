@@ -11,6 +11,11 @@
   /*Макет очень кривоват, как считать этот отступ я хз. Проявите тут лояльность пока что*/
 }
 
+.profile__image:hover {
+  background-color: #000;
+  opacity: 0.3;
+}
+
 @media screen and (max-width: 740px) {
   .profile__image {
     margin: 0 10px 0 0;

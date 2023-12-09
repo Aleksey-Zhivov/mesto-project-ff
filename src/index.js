@@ -63,7 +63,6 @@ async function addNewCard(evt) {
   evt.preventDefault();
 
   const cardParameters = await postCard(placeName.value, placeLink.value);
-  console.log(cardParameters);
   try {
     const card = createCard(
       cardParameters,

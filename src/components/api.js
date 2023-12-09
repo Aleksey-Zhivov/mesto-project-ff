@@ -28,7 +28,7 @@ function changeUserInfo(napeInput, jobInput) {
         headers: config.headers,
         body: JSON.stringify({
             name: napeInput,
-            about: jobInput,
+            about: jobInput
           })
     })
 };
@@ -55,25 +55,30 @@ function removeCard(cardId) {
         method: `DELETE`,
         headers: config.headers
     })
+};
+
+function setLike(cardId) {
+    return search(`/cards/likes/${cardId}`, { 
+        method: 'PUT',
+        headers: config.headers,
+    })
+};
+
+function removeLike(cardId) {
+    return search(`/cards/likes/${cardId}`, { 
+        method: 'DELETE',
+        headers: config.headers,
+    })
+};
+
+function renderLoading(isLoading) {
+if(isLoading) {
+    spinner.classList.add('spinner_visible');
+    content.classList.add('content_hidden');
+} else {
+    spinner.classList.remove('spinner_visible');
+    content.classList.remove('content_hidden');
+}
 }
 
-function renderResult(data) {
-    console.log(data);
-    return data;
-  }
-  
-function renderError(err) {
-    err = console.log('Something went wrong!');
-}
-
-  function renderLoading(isLoading) {
-    if(isLoading) {
-      spinner.classList.add('spinner_visible');
-      content.classList.add('content_hidden');
-    } else {
-      spinner.classList.remove('spinner_visible');
-      content.classList.remove('content_hidden');
-    }
-  }
-
-export { getUserInfo, changeUserInfo, getInitialCards, postCard, removeCard };
+export { getUserInfo, changeUserInfo, getInitialCards, postCard, removeCard, setLike, removeLike };
