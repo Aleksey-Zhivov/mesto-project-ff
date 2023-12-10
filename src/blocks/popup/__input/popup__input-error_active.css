@@ -9,11 +9,10 @@
     font-size: 12px;
     font-weight: 400;
     /*настройки для того, чтобы попап не растягивался сообщениями об ошибке*/
-    position: relative; 
+    position: relative;
     margin-top: -12px;
 }
 
 .popup__input-error_active:last-of-type {
     margin-top: 10px;
-    margin-bottom: -22px;
   }

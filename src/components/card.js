@@ -50,7 +50,7 @@ function createCard(cardParameters, userId, deleteCardCallback, openPopupCallbac
 function likeImage(event, cardParameters) {
   const like = event.target;
   //подумать как сделать лучше, выглядит сликом костыльно..
-  const cardLikeCounter = event.target.contains('.card__like').querySelector('.card__like-count');
+  const cardLikeCounter = event.target.closest('.card__like').querySelector('.card__like-count');
   
   if (!like.classList.contains('card__like-button_is-active')) {
     setLike(cardParameters._id)

@@ -14,22 +14,32 @@ function search(endpoint, parameters) {
         }
         return Promise.reject(`Ошибка: ${res.status}`);
     })
-}
+};
 
 function getUserInfo() {
     return search(`/users/me`, { 
         headers: config.headers 
     })
-}
+};
 
-function changeUserInfo(napeInput, jobInput) {
+function changeUserInfo(nameInput, jobInput) {
     return search(`/users/me`, { 
         method: 'PATCH',
         headers: config.headers,
         body: JSON.stringify({
-            name: napeInput,
+            name: nameInput,
             about: jobInput
           })
+    })
+};
+
+function changeAvatar(avatarLink) {
+    return search(`/users/me/avatar`, {
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify({
+            avatar: avatarLink
+        })
     })
 };
 
@@ -48,7 +58,7 @@ function postCard(placeName, placeLink) {
             link: placeLink
         })
     })
-}
+};
 
 function removeCard(cardId) {
     return search(`/cards/${cardId}`, {
@@ -71,14 +81,4 @@ function removeLike(cardId) {
     })
 };
 
-function renderLoading(isLoading) {
-if(isLoading) {
-    spinner.classList.add('spinner_visible');
-    content.classList.add('content_hidden');
-} else {
-    spinner.classList.remove('spinner_visible');
-    content.classList.remove('content_hidden');
-}
-}
-
-export { getUserInfo, changeUserInfo, getInitialCards, postCard, removeCard, setLike, removeLike };
+export { getUserInfo, changeUserInfo, getInitialCards, postCard, removeCard, setLike, removeLike, changeAvatar };
