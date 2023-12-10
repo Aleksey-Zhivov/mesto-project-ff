@@ -19,6 +19,9 @@ const popupTypeImage = document.querySelector('.popup_type_image');
 const popupImage = document.querySelector('.popup__image');
 const popupCaption = document.querySelector('.popup__caption');
 
+const popupDeleteCard = document.querySelector('.popup_type_delete-card');
+const deleteCardButton = popupDeleteCard.querySelector('.popup__button');
+
 const popupCloseButtons = document.querySelectorAll('.popup__close');
 
 const formEditProfile = document.forms['edit-profile'];
@@ -90,11 +93,15 @@ async function addNewCard(event) {
   }, 300)
 }
 
-const deleteCard = async (event, cardParameters) => {
+function deleteCard(event, cardParameters) {
   cardData = [event.target.closest('.card'), cardParameters._id];
   const [card, cardId] = cardData;
-  await removeCard(cardId);
-  card.remove();
+  openPopup(popupDeleteCard);
+  deleteCardButton.addEventListener('click', () => {
+    removeCard(cardId);
+    card.remove();
+    closePopup(popupDeleteCard);
+  })
 }
 
 newPlace.addEventListener('submit', addNewCard);
