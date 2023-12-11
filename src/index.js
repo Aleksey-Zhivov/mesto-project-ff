@@ -20,7 +20,7 @@ const popupImage = document.querySelector('.popup__image');
 const popupCaption = document.querySelector('.popup__caption');
 
 const popupDeleteCard = document.querySelector('.popup_type_delete-card');
-const deleteCardButton = popupDeleteCard.querySelector('.popup__button');
+const submitCardDelete = popupDeleteCard.querySelector('.popup__button');
 
 const popupCloseButtons = document.querySelectorAll('.popup__close');
 
@@ -93,11 +93,18 @@ async function addNewCard(event) {
   }, 300)
 }
 
+//Удаление карточки через попап 
+
 function deleteCard(event, cardParameters) {
   cardData = [event.target.closest('.card'), cardParameters._id];
   const [card, cardId] = cardData;
   openPopup(popupDeleteCard);
-  deleteCardButton.addEventListener('click', () => {
+  submitCardDelete.addEventListener('submit', () => {
+    removeCard(cardId);
+    card.remove();
+    closePopup(popupDeleteCard);
+  })
+  submitCardDelete.removeEventListener('submit', () => {
     removeCard(cardId);
     card.remove();
     closePopup(popupDeleteCard);
@@ -160,7 +167,7 @@ async function submitAvatarForm(event) {
   event.preventDefault();
   submitting(event, true);
 
-  try {
+try {
     const data = await changeAvatar(avatarLink.value);
     profileAvatar.setAttribute('style', `background-image: url(${data.avatar});`);
     event.submitter.value = 'Сохранение...';
