@@ -64,7 +64,7 @@ function likeImage(event, cardParameters) {
   пока больше ничего не придумалось
   */
 
-  if (!isLikedByOwner(cardParameters, userId)) { 
+  if (!cardLikeButton.classList.contains('card__like-button_is-active')) { 
     setLike(cardParameters._id)
     .then(cardParameters => {
       cardLikeButton.classList.add('card__like-button_is-active');
