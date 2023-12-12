@@ -1,4 +1,4 @@
-import { setLike, removeLike, getUserInfo } from './api';
+import { setLike, removeLike } from './api';
 
 function createCard(cardParameters, userId, deleteCardCallback, openPopupCallback, likeImageCallback) {
   const cardTemplate = document.querySelector('#card-template').content;
@@ -64,7 +64,7 @@ function likeImage(event, cardParameters) {
   пока больше ничего не придумалось
   */
 
-  if (!cardLikeButton.classList.contains('card__like-button_is-active')) { 
+  if (!isLikedByOwner(cardParameters, userId)) { 
     setLike(cardParameters._id)
     .then(cardParameters => {
       cardLikeButton.classList.add('card__like-button_is-active');
