@@ -22,13 +22,15 @@ function closePopupWithEsc(event) {
 }
 
 function closePopupByOutsideClick() {
-  const page = document.querySelector('.page');
-  page.addEventListener('mousedown', (event) => {
-    const popupIsOpened = event.target.closest('.popup_is-opened');
-    if (page.contains(popupIsOpened)) {
-      event.target === popupIsOpened ? closePopup(popupIsOpened) : false;
-    }
-  });
-}
+  const popups = Array.from(document.querySelectorAll('.popup'));
+  popups.forEach(popup => {
+    popup.addEventListener('mouseup', (event) => {
+      const targetClassList = event.target.classList;
+      if (targetClassList.contains('popup') || targetClassList.contains('popup__close')) {
+        closePopup(popup);
+      }
+    })
+  })
+}  
 
 export { openPopup, closePopup, closePopupByOutsideClick };

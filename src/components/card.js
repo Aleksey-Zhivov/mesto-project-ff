@@ -1,4 +1,4 @@
-import { setLike, removeLike } from './api';
+import { setLike, removeLike, getUserInfo } from './api';
 
 function createCard(cardParameters, userId, deleteCardCallback, openPopupCallback, likeImageCallback) {
   const cardTemplate = document.querySelector('#card-template').content;
@@ -15,7 +15,7 @@ function createCard(cardParameters, userId, deleteCardCallback, openPopupCallbac
 
   card.querySelector('.card__title').textContent = cardParameters.name;
   card.querySelector('.card__delete-button').addEventListener('click', (event) => {
-    deleteCardCallback(event, cardParameters);
+    deleteCardCallback(card, cardParameters);
   });
 
   //Убираем кнопку удаления карточки, если она не наша
@@ -23,54 +23,66 @@ function createCard(cardParameters, userId, deleteCardCallback, openPopupCallbac
     cardDeleteButton.style.display = 'none';
   }
 
-  //счетчик лайков всегда равен длине массива likes
   if (cardParameters.likes.length) {
     cardLikeCounter.textContent = cardParameters.likes.length;
+  } else {
+    cardLikeCounter.textContent = '0';
   }
 
-  //выборка лайков по id, если в массиве нет нашего лайка, то класс _is-active не навешан
-  for (let owner of cardParameters.likes) {
-    if (owner._id === userId) {
-      cardLikeButton.classList.add('card__like-button_is-active');
-    }
+  if (isLikedByOwner(cardParameters, userId)) {
+    cardLikeButton.classList.add('card__like-button_is-active');
+  } else {
+    cardLikeButton.classList.remove('card__like-button_is-active');
   }
 
   cardImage.addEventListener('click', () => {
     openPopupCallback(cardParameters);
   });
 
-  card.addEventListener('click', (event) => {
-    event.target === card.querySelector('.card__like-button') ? likeImageCallback(event, cardParameters) : false;
+  cardLikeButton.addEventListener('click', (event) => {
+    likeImageCallback(event, cardParameters);
   });
 
   return card;
 }
 
+//выборка лайков по id, если в массиве нет нашего лайка, то класс _is-active не навешан
+function isLikedByOwner(cardParameters, userId) {
+  if (cardParameters.likes.some(owner => owner._id === userId)) {
+    return true;
+  }
+}
+
 //лайк принимает событие и массив параметров карточки
+
 function likeImage(event, cardParameters) {
-  const like = event.target;
-  //подумать как сделать лучше, выглядит сликом костыльно..
-  const cardLikeCounter = event.target.closest('.card__like').querySelector('.card__like-count');
+  const cardLikeButton = event.target;
+  const cardLikeCounter = cardLikeButton.closest('.card__like').querySelector('.card__like-count');
   
-  if (!like.classList.contains('card__like-button_is-active')) {
+  /*
+  поствновка isLikedByOwner в условие ломает функционал. 
+  пока больше ничего не придумалось
+  */
+
+  if (!cardLikeButton.classList.contains('card__like-button_is-active')) { 
     setLike(cardParameters._id)
-    .then(res => {
-      like.classList.add('card__like-button_is-active');
-      cardLikeCounter.textContent = res.likes.length;
+    .then(cardParameters => {
+      cardLikeButton.classList.add('card__like-button_is-active');
+      cardLikeCounter.textContent = cardParameters.likes.length;
     })
-    .catch(err => {
-      console.log(err);
+    .catch(error => {
+      console.log(error);
     })
   } else {
     removeLike(cardParameters._id)
-      .then(res => {
-        like.classList.remove('card__like-button_is-active');
-        cardLikeCounter.textContent = res.likes.length;
-      })  
-      .catch((err) => {
-        console.log(err);
-      });
-    }  
+    .then(cardParameters => {
+      cardLikeButton.classList.remove('card__like-button_is-active');
+      cardLikeCounter.textContent = cardParameters.likes.length;
+    })  
+    .catch((error) => {
+      console.log(error);
+    });
   }
+}
 
 export { createCard, likeImage };

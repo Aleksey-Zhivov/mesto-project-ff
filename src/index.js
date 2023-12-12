@@ -20,9 +20,7 @@ const popupImage = document.querySelector('.popup__image');
 const popupCaption = document.querySelector('.popup__caption');
 
 const popupDeleteCard = document.querySelector('.popup_type_delete-card');
-const submitCardDelete = popupDeleteCard.querySelector('.popup__button');
-
-const popupCloseButtons = document.querySelectorAll('.popup__close');
+const deleteCardButton = popupDeleteCard.querySelector('.popup__button');
 
 const formEditProfile = document.forms['edit-profile'];
 const nameInput = formEditProfile.elements['name'];
@@ -88,27 +86,28 @@ async function addNewCard(event) {
     console.log(error);
   }
   closePopup(popupNewCard);
-  setTimeout(() => {
+  setTimeout(() => { //если убрать setTimeout, то текст кнопки с "Сохранение..." сменится обратно на "Сохранить" до закрытия попапа
     submitting(event, false);
-  }, 300)
+  }, 300) //300мс - время анимации закрытия попапа
 }
 
 //Удаление карточки через попап 
 
-function deleteCard(event, cardParameters) {
-  cardData = [event.target.closest('.card'), cardParameters._id];
-  const [card, cardId] = cardData;
+function deleteCard(card, cardParameters) {
+  cardData = [card, cardParameters._id];
+  const [currentCard, cardId] = cardData;
   openPopup(popupDeleteCard);
-  submitCardDelete.addEventListener('submit', () => {
-    removeCard(cardId);
-    card.remove();
-    closePopup(popupDeleteCard);
-  })
-  submitCardDelete.removeEventListener('submit', () => {
-    removeCard(cardId);
-    card.remove();
-    closePopup(popupDeleteCard);
-  })
+  deleteCardButton.addEventListener('click', deleting);
+  async function deleting() {
+    await removeCard(cardId);
+    try {
+      currentCard.remove()
+      closePopup(popupDeleteCard);
+      deleteCardButton.removeEventListener('click', deleting);
+  } catch (error) {
+    console.log(error);
+    }
+  }
 }
 
 newPlace.addEventListener('submit', addNewCard);
@@ -124,9 +123,9 @@ async function submitProfileForm(event) {
     profileTitle.textContent = data.name;
     profileDescription.textContent = data.about;
     closePopup(popupTypeEdit);
-    setTimeout(() => {
+    setTimeout(() => { //если убрать setTimeout, то текст кнопки с "Сохранение..." сменится обратно на "Сохранить" до закрытия попапа
       submitting(event, false);
-    }, 300)
+    }, 300) //300мс - время анимации закрытия попапа
   } catch(error) {
     console.log(error);
   }
@@ -140,15 +139,6 @@ profileEditButtton.addEventListener('click', () => {
 });
 
 formEditProfile.addEventListener('submit', submitProfileForm);
-
-//Закрытие попапа по кнопке Х
-
-popupCloseButtons.forEach((elem) => {
-  elem.addEventListener('click', (event) => {
-    const popupIsOpened = event.target.closest('.popup');
-    closePopup(popupIsOpened);
-  });
-});
 
 //Закрытие попапа по оверлею
 
@@ -167,15 +157,15 @@ async function submitAvatarForm(event) {
   event.preventDefault();
   submitting(event, true);
 
-try {
+  try {
     const data = await changeAvatar(avatarLink.value);
     profileAvatar.setAttribute('style', `background-image: url(${data.avatar});`);
     event.submitter.value = 'Сохранение...';
     popupAvatarEdit.querySelector('.popup__button').textContent = event.submitter.value;
     closePopup(popupAvatarEdit);
-    setTimeout(() => {
+    setTimeout(() => { //если убрать setTimeout, то текст кнопки с "Сохранение..." сменится обратно на "Сохранить" до закрытия попапа
       submitting(event, false);
-    }, 300)
+    }, 300) //300мс - время анимации закрытия попапа
   } catch (err) {
     console.log(err);
   } 
